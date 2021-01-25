@@ -1,0 +1,208 @@
+<fsmddescription>
+<statelist>
+    <state>Start</state>
+    <state>Scan_Floor</state>
+    <state>Scan_Room</state>
+    <state>Open_Door</state>
+    <state>Reject</state>
+    <state>Close_Door</state>
+    <state>END</state>
+</statelist>
+
+<initialstate>Start</initialstate>
+
+<inputlist>
+    <input>in_floor</input>
+    <input>in_room</input>
+    <input>in_max_floor</input>
+    <input>in_max_room</input>
+    <input>in_time</input>
+    <input>in_timeMax</input>
+</inputlist>
+
+<variablelist>
+    <variable>Floor_Number</variable>
+    <variable>Room_Number</variable>
+    <variable>time</variable>
+    <variable>room_door</variable>
+    <variable>floor_door</variable>
+</variablelist>
+
+<operationlist>
+    <operation>
+        <name>init_floor</name>
+        <expression>Floor_Number=in_floor</expression>
+    </operation>
+
+    <operation>
+        <name>init_room</name>
+        <expression>Room_Number=in_room</expression>
+    </operation>
+
+    <operation>
+        <name>init_max_floor</name>
+        <expression>max_floor=in_max_floor</expression>
+    </operation>
+    
+    <operation>
+        <name>init_max_room</name>
+        <expression>max_room=in_max_room</expression>
+    </operation>
+
+    <operation>
+        <name>init_time</name>
+        <expression>time=in_time</expression>
+    </operation>
+
+    <operation>
+        <name>init_door1</name>
+        <expression>room_door="Closed"</expression>
+    </operation>
+
+    <operation>
+        <name>init_door2</name>
+        <expression>floor_door="Closed"</expression>
+    </operation>
+
+    <operation>
+        <name>Timer_Count</name>
+        <expression>time=time+1</expression>
+    </operation>
+
+    <operation>
+        <name>open_room</name>
+        <expression>room_door="Open"</expression>
+    </operation>
+
+    <operation>
+        <name>close_room</name>
+        <expression>room_door="Closed"</expression>
+    </operation>
+
+    <operation>
+        <name>open_floor</name>
+        <expression>floor_door="Open"</expression>
+    </operation>
+
+    <operation>
+        <name>close_floor</name>
+        <expression>floor_door="Closed"</expression>
+    </operation>
+
+</operationlist>
+
+<conditionlist>
+    <condition>
+        <name>Check_floor</name>
+        <expression> Floor_Number &lt;= max_floor </expression>
+    </condition>
+
+    <condition>
+        <name>reject_floor</name>
+        <expression> Floor_Number &gt; max_floor </expression>
+    </condition>
+
+    <condition>
+        <name>Check_room</name>
+        <expression> Room_Number &lt;= max_room </expression>
+    </condition>
+
+    <condition>
+        <name>reject_room</name>
+        <expression> Room_Number &gt; max_room </expression>
+    </condition>
+
+    <condition>
+        <name>Timer_Done</name>
+        <expression> time == in_timeMax </expression>
+    </condition>
+
+    <condition>
+        <name>Timer_Ongoing</name>
+        <expression> time &lt; in_timeMax </expression>
+    </condition>
+</conditionlist>
+
+<fsmd>
+    <Start>
+        <transition>
+            <condition>True</condition>
+            <instruction>init_floor init_room init_max_floor init_max_room init_time init_door1 init_door2</instruction>
+            <nextstate>Scan_Floor</nextstate>
+      </transition>
+    </Start>
+
+    <Scan_Floor>
+        <transition>
+            <condition>Check_floor</condition>
+            <instruction>open_floor</instruction>
+            <nextstate>Scan_Room</nextstate>
+        </transition>
+        <transition>
+            <condition>reject_floor</condition>
+            <instruction>NOP</instruction>
+            <nextstate>Reject</nextstate>
+        </transition>
+
+    </Scan_Floor>
+
+    <Scan_Room>
+        <transition>
+            <condition>Check_room</condition>
+            <instruction>open_room</instruction>
+            <nextstate>Open_Door</nextstate>
+        </transition>
+        <transition>
+            <condition>reject_room</condition>
+            <instruction>NOP</instruction>
+            <nextstate>Reject</nextstate>
+        </transition>
+    </Scan_Room>
+
+    <Open_Door>
+        <transition>
+            <condition>Timer_Ongoing</condition>
+            <instruction>Timer_Count</instruction>
+            <nextstate>Open_Door</nextstate>
+        </transition>
+        <transition>
+            <condition>Timer_Done</condition>
+            <instruction>NOP</instruction>
+            <nextstate>Close_Door</nextstate>
+        </transition>
+    </Open_Door>
+
+    <Close_Door>
+        <transition>
+        <condition>True</condition>
+        <instruction>close_room close_floor init_time</instruction>
+        <nextstate>END</nextstate>
+        </transition>
+    </Close_Door>
+
+    <Reject>
+        <transition>
+        <condition>True</condition>
+        <instruction>NOP</instruction>
+        <nextstate>END</nextstate>
+        </transition>
+
+    </Reject>
+
+    <END>
+        <transition>
+        <condition>True</condition>
+        <instruction>NOP</instruction>
+        <nextstate>END</nextstate>
+        </transition>
+    </END>
+
+</fsmd>
+</fsmddescription>
+
+
+
+
+
+
+

@@ -1,0 +1,32 @@
+<fsmdstimulus>
+    <setinput>
+        <cycle>0</cycle>
+        <expression>in_floor=4</expression>
+    </setinput>
+
+    <setinput>
+        <cycle>0</cycle>
+        <expression>in_room=15</expression>
+    </setinput>
+
+    <setinput>
+        <cycle>0</cycle>
+        <expression>in_max_floor=10</expression>
+    </setinput>
+
+    <setinput>
+        <cycle>0</cycle>
+        <expression>in_max_room=30</expression>
+    </setinput>
+
+    <setinput>
+        <cycle>0</cycle>
+        <expression>in_time=0</expression>
+    </setinput>
+
+    <setinput>
+        <cycle>0</cycle>
+        <expression>in_timeMax=30</expression>
+    </setinput>
+</fsmdstimulus>
+
